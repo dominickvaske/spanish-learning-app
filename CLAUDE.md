@@ -24,8 +24,11 @@ The owner is learning software engineering through this project. They are strong
 
 - `npm run dev`: start the dev server at http://localhost:3000
 - `npm run lint`: check the code with ESLint
+- `npm test`: run unit tests (Vitest) in watch mode
 - `npm run build`: production build (also type-checks everything)
 
 ## Layout
 
 - `src/app/`: pages and routes. The folder structure is the URL structure (`src/app/review/page.tsx` → `/review`).
+- `src/components/`: reusable UI pieces (e.g. `SpanishInput`).
+- `src/lib/`: plain TypeScript logic with no UI. Keep it pure and unit-test it (`*.test.ts` next to the file).

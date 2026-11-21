@@ -6,8 +6,8 @@ Each milestone produces something usable. Don't start a milestone until the prev
 
 | # | Milestone | Done when… | Status |
 |---|-----------|-----------|--------|
-| 0 | **Setup**: git, Next.js skeleton, CLAUDE.md, roadmap | Home page loads at localhost:3000; first commit made | 🟡 in progress |
-| 1 | **Flashcards (no AI)**: create decks and cards, review them, accent-input shortcuts, stored in a database | I can add cards, restart the app, and they're still there | ⬜ |
+| 0 | **Setup**: git, Next.js skeleton, CLAUDE.md, roadmap | Home page loads at localhost:3000; first commit made | ✅ done |
+| 1 | **Flashcards (no AI)**: create decks and cards, review them, accent-input shortcuts, stored in a database | I can add cards, restart the app, and they're still there | 🟡 in progress |
 | 2 | **AI grading**: answers are judged correct / acceptable alternative / wrong, with an explanation | The grader passes a hand-written test set of answers with known verdicts | ⬜ |
 | 3 | **Attempt history + spaced repetition**: every answer is recorded; cards resurface on a schedule | The review queue shows only cards that are due | ⬜ |
 | 4 | **Weak-spot drills**: detect patterns in misses and generate a short targeted exercise | After repeated misses on a topic, the app offers a drill for it | ⬜ |
@@ -15,11 +15,15 @@ Each milestone produces something usable. Don't start a milestone until the prev
 | 6 | **Conversation practice**: typed chat with inline corrections | A 10-message conversation with useful corrections | ⬜ |
 | 7 | **Deploy**: auth, hosted DB, API cost limits | Usable from my phone; a friend could sign up | ⬜ |
 
+## Decisions made
+
+- **Accent input** (M1): typed sequences that convert as you type (`n~` → ñ, `e'` → é, `u"` → ü, `??` → ¿, `!!` → ¡). Backspace right after a conversion restores the literal text. On-screen buttons are a backup. Ctrl shortcuts were ruled out because browsers reserve Ctrl+N/T/W.
+
 ## Open decisions
 
-- **Accent input scheme** (M1): Alt+letter? A typed sequence such as `n~` → ñ? On-screen buttons? (Ctrl+N/T/W can't be used because browsers reserve them.)
 - **Database library** (M1): leaning toward SQLite + Drizzle (its queries read like SQL).
 
 ## Parking lot (ideas for later, not now)
 
+- Multi-line version of SpanishInput (textarea) for conversation practice (M6)
 - (add ideas here instead of expanding the current milestone)
