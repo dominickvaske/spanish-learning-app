@@ -19,9 +19,13 @@ Each milestone produces something usable. Don't start a milestone until the prev
 
 - **Accent input** (M1): typed sequences that convert as you type (`n~` → ñ, `e'` → é, `u"` → ü, `??` → ¿, `!!` → ¡). Backspace right after a conversion restores the literal text. On-screen buttons are a backup. Ctrl shortcuts were ruled out because browsers reserve Ctrl+N/T/W.
 
+- **Database** (M1): SQLite through libSQL, with the Drizzle ORM. Locally it's a single file (`local.db`); for deployment the same code can point at a hosted libSQL database by changing `DATABASE_URL`.
+- **Decks vs tags** (M1): each card belongs to exactly one deck (= its source, e.g. a Babbel lesson) and can have any number of tags (= what it's about). Cross-deck practice ("everything tagged ser_vs_estar") is a tag filter, not a second deck. Moving to many decks per card later would be a cheap migration.
+- **Answer history** (M3, planned): an `attempts` table (one row per answer). "Last correct" etc. are queries, not columns on cards. Attempts will carry AI-assigned *mistake* tags, separate from a card's *topic* tags; M4 looks for patterns in those.
+
 ## Open decisions
 
-- **Database library** (M1): leaning toward SQLite + Drizzle (its queries read like SQL).
+- (none right now)
 
 ## Parking lot (ideas for later, not now)
 

@@ -17,7 +17,7 @@ The owner is learning software engineering through this project. They are strong
 ## Stack
 
 - Next.js (App Router) + TypeScript + Tailwind CSS
-- Database: TBD in milestone 1 (leaning toward SQLite + Drizzle)
+- Database: SQLite via libSQL (`@libsql/client`) + Drizzle ORM. Schema in `src/db/schema.ts`; migrations in `drizzle/` (generated, committed, never hand-edited after being applied). Only server code may import `src/db` (enforced by `server-only`).
 - AI: Claude API, called **only from server-side code**. The API key lives in `.env.local` (gitignored) and must never reach the browser.
 
 ## Commands
@@ -25,6 +25,9 @@ The owner is learning software engineering through this project. They are strong
 - `npm run dev`: start the dev server at http://localhost:3000
 - `npm run lint`: check the code with ESLint
 - `npm test`: run unit tests (Vitest) in watch mode
+- `npm run db:generate -- --name <what_changed>`: after editing the schema, generate a migration (review the SQL!)
+- `npm run db:migrate`: apply pending migrations to `local.db`
+- `npm run db:studio`: browse the database in a web UI
 - `npm run build`: production build (also type-checks everything)
 
 ## Layout
