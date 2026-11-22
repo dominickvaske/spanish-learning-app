@@ -37,10 +37,6 @@ export type AccentMatch = {
 export function findAccentReplacement(
   textBeforeCursor: string,
 ): AccentMatch | null {
-  if (!textBeforeCursor) {
-    return null;
-  }
-
   for (const [sequence, replacement] of Object.entries(ACCENT_RULES)) {
     if (textBeforeCursor.endsWith(sequence)) {
       return { sequence, replacement };
