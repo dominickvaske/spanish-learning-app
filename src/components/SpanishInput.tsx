@@ -17,6 +17,11 @@ type Props = {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  /** Form field name, so the value is included when a form is submitted. */
+  name?: string;
+  id?: string;
+  /** Hide the á é í … buttons (e.g. for secondary fields). */
+  hideButtons?: boolean;
 };
 
 /**
@@ -24,7 +29,14 @@ type Props = {
  * characters as you type. Pressing Backspace right after a conversion
  * restores the literal sequence instead.
  */
-export function SpanishInput({ value, onChange, placeholder }: Props) {
+export function SpanishInput({
+  value,
+  onChange,
+  placeholder,
+  name,
+  id,
+  hideButtons = false,
+}: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   // Where to put the cursor after React re-renders with the new text.
   const pendingCursor = useRef<number | null>(null);
@@ -99,6 +111,9 @@ export function SpanishInput({ value, onChange, placeholder }: Props) {
     <div className="flex flex-col gap-2">
       <input
         ref={inputRef}
+        id={id}
+        name={name}
+        lang="es"
         value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
@@ -107,20 +122,22 @@ export function SpanishInput({ value, onChange, placeholder }: Props) {
         spellCheck={false}
         className="rounded-lg border border-zinc-300 px-4 py-3 text-xl dark:border-zinc-700 dark:bg-zinc-900"
       />
-      <div className="flex flex-wrap gap-1">
-        {BUTTON_CHARS.map((char) => (
-          <button
-            key={char}
-            type="button"
-            // preventDefault on mousedown keeps focus (and the cursor) in the input
-            onMouseDown={(e) => e.preventDefault()}
-            onClick={() => insertChar(char)}
-            className="h-9 w-9 rounded border border-zinc-300 text-lg hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
-          >
-            {char}
-          </button>
-        ))}
-      </div>
+      {!hideButtons && (
+        <div className="flex flex-wrap gap-1">
+          {BUTTON_CHARS.map((char) => (
+            <button
+              key={char}
+              type="button"
+              // preventDefault on mousedown keeps focus (and the cursor) in the input
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => insertChar(char)}
+              className="h-9 w-9 rounded border border-zinc-300 text-lg hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
+            >
+              {char}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

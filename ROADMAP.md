@@ -27,7 +27,16 @@ Each milestone produces something usable. Don't start a milestone until the prev
 
 - (none right now)
 
+## Milestone 1 remaining
+
+- [x] Create decks; add, list, and delete cards
+- [ ] Tags on cards
+- [ ] Edit a card; rename and delete a deck (with confirmation)
+- [ ] Review screen: show English, type Spanish, reveal the answer (exact-match only until M2)
+
 ## Parking lot (ideas for later, not now)
+
+- Automated browser (end-to-end) tests with Playwright. Needs `sudo npx playwright install-deps` once on WSL.
 
 - Multi-line version of SpanishInput (textarea) for conversation practice (M6)
 - (add ideas here instead of expanding the current milestone)

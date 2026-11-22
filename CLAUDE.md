@@ -34,4 +34,11 @@ The owner is learning software engineering through this project. They are strong
 
 - `src/app/`: pages and routes. The folder structure is the URL structure (`src/app/review/page.tsx` → `/review`).
 - `src/components/`: reusable UI pieces (e.g. `SpanishInput`).
+- `src/db/queries.ts`: read queries. `src/app/<route>/actions.ts`: Server Actions (writes), which validate input with `src/lib/` helpers.
 - `src/lib/`: plain TypeScript logic with no UI. Keep it pure and unit-test it (`*.test.ts` next to the file).
+
+## Next.js gotchas in this project
+
+- `cacheComponents: true` is on. A page that reads the database needs a `loading.tsx` (or `<Suspense>`) **and** `await connection()` before the query. Otherwise the build either errors or bakes a frozen snapshot of the data into the page. Check `npm run build` output: data pages should show ◐ or ƒ, not ○.
+- `params` is a Promise: `const { id } = await params`.
+- After a write, call `revalidatePath("/decks", "layout")` so the pages show the new data.
