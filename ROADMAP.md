@@ -31,7 +31,8 @@ Each milestone produces something usable. Don't start a milestone until the prev
 
 - [x] Create decks; add, list, and delete cards
 - [ ] Tags on cards
-- [ ] Edit a card; rename and delete a deck (with confirmation)
+- [x] Edit a card; Enter moves between fields (Ctrl+Enter saves)
+- [ ] Rename and delete a deck (with confirmation)
 - [ ] Review screen: show English, type Spanish, reveal the answer (exact-match only until M2)
 
 ## Parking lot (ideas for later, not now)

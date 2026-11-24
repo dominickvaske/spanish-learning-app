@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDeck, listCards } from "@/db/queries";
-import { createCard, deleteCard } from "../actions";
-import { NewCardForm } from "./NewCardForm";
+import { createCard } from "../actions";
+import { CardForm } from "./CardForm";
+import { CardItem } from "./CardItem";
 
 // The [deckId] folder name makes this a dynamic route: /decks/7 → deckId = "7".
 export default async function DeckPage({
@@ -28,7 +29,11 @@ export default async function DeckPage({
       </div>
 
       {/* .bind fills in the first argument (deck.id) ahead of time */}
-      <NewCardForm action={createCard.bind(null, deck.id)} />
+      <CardForm
+        action={createCard.bind(null, deck.id)}
+        submitLabel="Add card"
+        resetOnSave
+      />
 
       <section className="flex flex-col gap-2">
         <h2 className="text-lg font-semibold">
@@ -36,33 +41,7 @@ export default async function DeckPage({
         </h2>
         <ul className="flex flex-col gap-2">
           {cards.map((card) => (
-            <li
-              key={card.id}
-              className="flex items-start justify-between gap-4 rounded-lg border border-zinc-200 px-4 py-3 dark:border-zinc-800"
-            >
-              <div className="flex flex-col">
-                <span>{card.english}</span>
-                <span lang="es" className="text-lg font-medium">
-                  {card.spanish}
-                </span>
-                {card.alternatives.length > 0 && (
-                  <span lang="es" className="text-sm text-zinc-500">
-                    Also: {card.alternatives.join(" · ")}
-                  </span>
-                )}
-                {card.notes && (
-                  <span className="text-sm italic text-zinc-500">
-                    {card.notes}
-                  </span>
-                )}
-              </div>
-              {/* A plain form posting to a server action: works without client JS */}
-              <form action={deleteCard.bind(null, card.id)}>
-                <button className="text-sm text-zinc-400 hover:text-red-600">
-                  Delete
-                </button>
-              </form>
-            </li>
+            <CardItem key={card.id} card={card} />
           ))}
         </ul>
       </section>

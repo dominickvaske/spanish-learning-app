@@ -31,17 +31,21 @@ export async function createDeck(
   redirect(`/decks/${deck.id}`);
 }
 
-export async function createCard(
-  deckId: number,
-  _prev: FormState,
-  formData: FormData,
-): Promise<FormState> {
-  const parsed = parseCardInput({
+function parseCardForm(formData: FormData) {
+  return parseCardInput({
     english: formData.get("english"),
     spanish: formData.get("spanish"),
     alternatives: formData.get("alternatives"),
     notes: formData.get("notes"),
   });
+}
+
+export async function createCard(
+  deckId: number,
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const parsed = parseCardForm(formData);
   if (!parsed.ok) return { error: parsed.error };
 
   try {
@@ -50,6 +54,25 @@ export async function createCard(
     // Most likely the deck was deleted in the meantime (foreign key failure).
     return { error: "Couldn't save the card. Does this deck still exist?" };
   }
+
+  revalidatePath("/decks", "layout");
+  return { savedAt: Date.now() };
+}
+
+export async function updateCard(
+  cardId: number,
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const parsed = parseCardForm(formData);
+  if (!parsed.ok) return { error: parsed.error };
+
+  const updated = await db
+    .update(cards)
+    .set(parsed.value)
+    .where(eq(cards.id, cardId))
+    .returning({ id: cards.id });
+  if (updated.length === 0) return { error: "This card no longer exists." };
 
   revalidatePath("/decks", "layout");
   return { savedAt: Date.now() };
