@@ -22,6 +22,7 @@ type Props = {
   id?: string;
   /** Hide the á é í … buttons (e.g. for secondary fields). */
   hideButtons?: boolean;
+  autoFocus?: boolean;
 };
 
 /**
@@ -36,6 +37,7 @@ export function SpanishInput({
   name,
   id,
   hideButtons = false,
+  autoFocus = false,
 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   // Where to put the cursor after React re-renders with the new text.
@@ -114,6 +116,7 @@ export function SpanishInput({
         id={id}
         name={name}
         lang="es"
+        autoFocus={autoFocus}
         value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}

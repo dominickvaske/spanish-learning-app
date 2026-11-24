@@ -162,7 +162,7 @@ export function CardForm({
           name="notes"
           value={fields.notes}
           onChange={(e) => set("notes")(e.target.value)}
-          placeholder="e.g. formal (usted)"
+          placeholder="e.g. Verb: mezclar · formal (usted)"
           autoComplete="off"
           className={inputClass}
         />

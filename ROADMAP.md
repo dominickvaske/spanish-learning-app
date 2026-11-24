@@ -19,6 +19,7 @@ Each milestone produces something usable. Don't start a milestone until the prev
 
 - **Accent input** (M1): typed sequences that convert as you type (`n~` → ñ, `e'` → é, `u"` → ü, `??` → ¿, `!!` → ¡). Backspace right after a conversion restores the literal text. On-screen buttons are a backup. Ctrl shortcuts were ruled out because browsers reserve Ctrl+N/T/W.
 
+- **Review checking** (M1): ignores case, spacing, and punctuation. Accent-only mistakes (including ñ → n) and one small typo in answers of 8+ letters are "almost" and count as passing. Root verbs and other hints go in a card's notes, never in the answer. Saved alternatives are accepted. Until M2, "I was right" overrides a verdict without saving anything.
 - **Database** (M1): SQLite through libSQL, with the Drizzle ORM. Locally it's a single file (`local.db`); for deployment the same code can point at a hosted libSQL database by changing `DATABASE_URL`.
 - **Decks vs tags** (M1): each card belongs to exactly one deck (= its source, e.g. a Babbel lesson) and can have any number of tags (= what it's about). Cross-deck practice ("everything tagged ser_vs_estar") is a tag filter, not a second deck. Moving to many decks per card later would be a cheap migration.
 - **Answer history** (M3, planned): an `attempts` table (one row per answer). "Last correct" etc. are queries, not columns on cards. Attempts will carry AI-assigned *mistake* tags, separate from a card's *topic* tags; M4 looks for patterns in those.
@@ -33,11 +34,13 @@ Each milestone produces something usable. Don't start a milestone until the prev
 - [ ] Tags on cards
 - [x] Edit a card; Enter moves between fields (Ctrl+Enter saves)
 - [ ] Rename and delete a deck (with confirmation)
-- [ ] Review screen: show English, type Spanish, reveal the answer (exact-match only until M2)
+- [x] Review screen: one deck, shuffled, English → Spanish; correct / almost (accents only) / wrong; "I was right" override; summary with retry of missed cards
 
 ## Parking lot (ideas for later, not now)
 
-- Automated browser (end-to-end) tests with Playwright. Needs `sudo npx playwright install-deps` once on WSL.
+- Automated browser (end-to-end) tests with Playwright, committed to the repo. Needs `sudo npx playwright install-deps` once on WSL. (Claude's throwaway browser tests vanish when its scratch folder is cleared.)
 
+- M2: the AI grader should catch accent mistakes that change meaning (año vs ano), which simple "almost" matching can't.
+- Show a card's notes *before* answering when they're a hint (e.g. "formal"), not only after.
 - Multi-line version of SpanishInput (textarea) for conversation practice (M6)
 - (add ideas here instead of expanding the current milestone)
