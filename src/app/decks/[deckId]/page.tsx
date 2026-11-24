@@ -4,6 +4,7 @@ import { getDeck, listCards } from "@/db/queries";
 import { createCard } from "../actions";
 import { CardForm } from "./CardForm";
 import { CardItem } from "./CardItem";
+import { DeckHeader } from "./DeckHeader";
 
 // The [deckId] folder name makes this a dynamic route: /decks/7 → deckId = "7".
 export default async function DeckPage({
@@ -25,17 +26,7 @@ export default async function DeckPage({
         <Link href="/decks" className="text-sm text-blue-600 hover:underline">
           ← All decks
         </Link>
-        <div className="flex items-center justify-between gap-4">
-          <h1 className="text-3xl font-bold">{deck.name}</h1>
-          {cards.length > 0 && (
-            <Link
-              href={`/decks/${deck.id}/review`}
-              className="rounded-lg bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700"
-            >
-              Review {cards.length} {cards.length === 1 ? "card" : "cards"} →
-            </Link>
-          )}
-        </div>
+        <DeckHeader deckId={deck.id} name={deck.name} cardCount={cards.length} />
       </div>
 
       {/* .bind fills in the first argument (deck.id) ahead of time */}

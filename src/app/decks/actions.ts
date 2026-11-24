@@ -31,6 +31,32 @@ export async function createDeck(
   redirect(`/decks/${deck.id}`);
 }
 
+export async function renameDeck(
+  deckId: number,
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const parsed = parseDeckName(formData.get("name"));
+  if (!parsed.ok) return { error: parsed.error };
+
+  const updated = await db
+    .update(decks)
+    .set({ name: parsed.value })
+    .where(eq(decks.id, deckId))
+    .returning({ id: decks.id });
+  if (updated.length === 0) return { error: "This deck no longer exists." };
+
+  revalidatePath("/decks", "layout");
+  return { savedAt: Date.now() };
+}
+
+/** Deletes the deck. Its cards (and their tag links) go with it via ON DELETE CASCADE. */
+export async function deleteDeck(deckId: number) {
+  await db.delete(decks).where(eq(decks.id, deckId));
+  revalidatePath("/decks", "layout");
+  redirect("/decks");
+}
+
 function parseCardForm(formData: FormData) {
   return parseCardInput({
     english: formData.get("english"),
