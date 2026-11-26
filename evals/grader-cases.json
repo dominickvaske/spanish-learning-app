@@ -1,0 +1,279 @@
+{
+  "about": "Test set for the AI answer grader (milestone 2). Each case is a card, what the learner typed, and the verdict a good Spanish tutor would give. 'gray' cases are judgment calls the owner should confirm. Verdicts: correct = right meaning and grammatical (any natural phrasing); almost = right except accents or a small spelling slip; wrong = grammar error or different meaning.",
+  "cases": [
+    {
+      "id": "alt-article-dropped",
+      "english": "Mix the potatoes with the mayonnaise and cheese.",
+      "spanish": "Mezcla las papas con la mayonesa y el queso.",
+      "alternatives": ["Mezcle las papas con la mayonesa y el queso."],
+      "notes": "Verb: mezclar. to mix; singular",
+      "typed": "Mezcla las papas con la mayonesa y queso",
+      "expected": "correct",
+      "gray": true,
+      "why": "Dropping the second article is common and understood, especially in recipes; repeating it is more standard. Should be accepted, with a tip."
+    },
+    {
+      "id": "alt-tienes-sugerencias",
+      "english": "Do you have any suggestions?",
+      "spanish": "¿Tienes alguna sugerencia?",
+      "alternatives": ["¿Tiene alguna sugerencia usted?"],
+      "notes": null,
+      "typed": "¿Tienes sugerencias?",
+      "expected": "correct",
+      "why": "Natural, same meaning."
+    },
+    {
+      "id": "alt-armar",
+      "english": "Nobody can assemble this (piece of) furniture.",
+      "spanish": "Nadie puede montar este mueble.",
+      "alternatives": [],
+      "notes": null,
+      "typed": "Nadie puede armar este mueble",
+      "expected": "correct",
+      "why": "'Armar' is the usual Latin American verb for assembling furniture."
+    },
+    {
+      "id": "alt-destornilladores",
+      "english": "I have two screwdrivers, but neither of them is that size.",
+      "spanish": "Tengo dos desarmadores, pero ninguno es de ese tamaño.",
+      "alternatives": [],
+      "notes": null,
+      "typed": "Tengo dos destornilladores, pero ninguno es de ese tamaño",
+      "expected": "correct",
+      "why": "'Destornillador' is the standard word in Spain and much of Latin America; 'desarmador' is Mexican."
+    },
+    {
+      "id": "alt-pedazos",
+      "english": "Cut the potatoes into big pieces.",
+      "spanish": "Corta las papas en trozos grandes.",
+      "alternatives": [],
+      "notes": null,
+      "typed": "Corta las papas en pedazos grandes",
+      "expected": "correct",
+      "why": "'Pedazos' and 'trozos' are interchangeable here."
+    },
+    {
+      "id": "alt-patatas",
+      "english": "Cut the potatoes into big pieces.",
+      "spanish": "Corta las papas en trozos grandes.",
+      "alternatives": [],
+      "notes": null,
+      "typed": "Corta las patatas en trozos grandes",
+      "expected": "correct",
+      "why": "'Patatas' is the Spain word for potatoes."
+    },
+    {
+      "id": "alt-agregar-instead-of-target-verb",
+      "english": "Add salt, parsley and corn.",
+      "spanish": "Añade sal, perejil y maíz.",
+      "alternatives": ["Añada sal, perejil y maíz."],
+      "notes": "Verb: añadir",
+      "typed": "Agrega sal, perejil y maíz",
+      "expected": "correct",
+      "gray": true,
+      "why": "Correct Spanish with the same meaning, but the card practices 'añadir'. Accept, and mention the target verb."
+    },
+    {
+      "id": "alt-olvidarse-de",
+      "english": "We're not forgetting anything.",
+      "spanish": "No olvidamos nada.",
+      "alternatives": [],
+      "notes": null,
+      "typed": "No nos olvidamos de nada",
+      "expected": "correct",
+      "why": "'Olvidarse de' is an equally natural construction."
+    },
+    {
+      "id": "alt-cucharaditas",
+      "english": "Pour (in) two teaspoons of olive oil.",
+      "spanish": "Echa dos cucharadas pequeñas de aceite de oliva.",
+      "alternatives": ["Eche dos cucharadas pequeñas de aceite de oliva."],
+      "notes": "informal",
+      "typed": "Echa dos cucharaditas de aceite de oliva",
+      "expected": "correct",
+      "why": "'Cucharadita' is literally 'teaspoon'; arguably more natural."
+    },
+    {
+      "id": "err-negative-command-indicative",
+      "english": "Don't mix the ingredients until the final step.",
+      "spanish": "No mezcles los ingredientes hasta el último paso.",
+      "alternatives": [],
+      "notes": "Verb: mezclar",
+      "typed": "No mezclas los ingredientes hasta el último paso",
+      "expected": "wrong",
+      "why": "Negative tú commands use the subjunctive (mezcles). 'Mezclas' is a statement: 'you don't mix'. One letter apart, so the simple check calls it a typo."
+    },
+    {
+      "id": "err-negative-command-anadas",
+      "english": "Don't add too much oil in the pan.",
+      "spanish": "No añadas demasiado aceite en el sartén.",
+      "alternatives": [],
+      "notes": "Verb: añadir",
+      "typed": "No añade demasiado aceite en el sartén",
+      "expected": "wrong",
+      "why": "Negative tú command needs the subjunctive 'añadas'."
+    },
+    {
+      "id": "err-singular-instead-of-plural",
+      "english": "Raise (pl.) the board until it's at the desired height.",
+      "spanish": "Suban la tabla hasta que quede a la altura deseada.",
+      "alternatives": [],
+      "notes": "Verb: subir",
+      "typed": "Suba la tabla hasta que quede a la altura deseada",
+      "expected": "wrong",
+      "why": "The prompt says plural (ustedes: suban); 'suba' is singular usted. One letter apart."
+    },
+    {
+      "id": "err-hasta-que-indicative",
+      "english": "Raise (pl.) the board until it's at the desired height.",
+      "spanish": "Suban la tabla hasta que quede a la altura deseada.",
+      "alternatives": [],
+      "notes": "Verb: subir",
+      "typed": "Suban la tabla hasta que queda a la altura deseada",
+      "expected": "wrong",
+      "why": "'Hasta que' about a future moment takes the subjunctive (quede). One letter apart."
+    },
+    {
+      "id": "err-hasta-que-estan",
+      "english": "Turn (pl.) the screws several times (lit. Give the screws various turns) until they're properly tightened.",
+      "spanish": "Den varias vueltas a los tornillos hasta que estén bien apretados.",
+      "alternatives": [],
+      "notes": "Verb: dar",
+      "typed": "Den varias vueltas a los tornillos hasta que están bien apretados",
+      "expected": "wrong",
+      "why": "Needs the subjunctive 'estén' after 'hasta que' (future)."
+    },
+    {
+      "id": "err-gender-agreement",
+      "english": "Do you have any suggestions?",
+      "spanish": "¿Tienes alguna sugerencia?",
+      "alternatives": ["¿Tiene alguna sugerencia usted?"],
+      "notes": null,
+      "typed": "¿Tienes alguno sugerencia?",
+      "expected": "wrong",
+      "why": "'Sugerencia' is feminine, so 'alguna'."
+    },
+    {
+      "id": "err-number-agreement",
+      "english": "Cut the cheese into very big pieces.",
+      "spanish": "Corta el queso en trozos muy grandes.",
+      "alternatives": [],
+      "notes": null,
+      "typed": "Corta el queso en trozos muy grande",
+      "expected": "wrong",
+      "why": "Adjective must agree in number with 'trozos': 'grandes'. One letter apart."
+    },
+    {
+      "id": "err-nadie-plural",
+      "english": "Nobody can assemble this (piece of) furniture.",
+      "spanish": "Nadie puede montar este mueble.",
+      "alternatives": [],
+      "notes": null,
+      "typed": "Nadie pueden montar este mueble",
+      "expected": "wrong",
+      "why": "'Nadie' takes a singular verb."
+    },
+    {
+      "id": "err-double-negation",
+      "english": "We're not forgetting anything.",
+      "spanish": "No olvidamos nada.",
+      "alternatives": [],
+      "notes": null,
+      "typed": "No olvidamos algo",
+      "expected": "wrong",
+      "why": "Spanish requires the double negative: 'no ... nada'."
+    },
+    {
+      "id": "err-caber-vs-encajar",
+      "english": "There is something that doesn't fit.",
+      "spanish": "Hay algo que no encaja.",
+      "alternatives": [],
+      "notes": null,
+      "typed": "Hay algo que no cabe",
+      "expected": "wrong",
+      "gray": true,
+      "why": "'Caber' = fit in a space; 'encajar' = fit together. In the furniture-assembly context the meaning changes."
+    },
+    {
+      "id": "meaning-small",
+      "english": "Cut the potatoes into big pieces.",
+      "spanish": "Corta las papas en trozos grandes.",
+      "alternatives": [],
+      "notes": null,
+      "typed": "Corta las papas en trozos pequeños",
+      "expected": "wrong",
+      "why": "Says 'small' instead of 'big'."
+    },
+    {
+      "id": "meaning-pimienta",
+      "english": "Add salt, parsley and corn.",
+      "spanish": "Añade sal, perejil y maíz.",
+      "alternatives": ["Añada sal, perejil y maíz."],
+      "notes": "Verb: añadir",
+      "typed": "Añade sal, pimienta y maíz",
+      "expected": "wrong",
+      "why": "'Pimienta' is pepper, not parsley."
+    },
+    {
+      "id": "meaning-english",
+      "english": "Pour (in) two teaspoons of olive oil.",
+      "spanish": "Echa dos cucharadas pequeñas de aceite de oliva.",
+      "alternatives": ["Eche dos cucharadas pequeñas de aceite de oliva."],
+      "notes": "informal",
+      "typed": "Pour two teaspoons of olive oil",
+      "expected": "wrong",
+      "why": "Not Spanish."
+    },
+    {
+      "id": "almost-accent-rapido",
+      "english": "Don't eat a lot of food or very fast.",
+      "spanish": "No comas mucha comida ni muy rápido.",
+      "alternatives": [],
+      "notes": null,
+      "typed": "No comas mucha comida ni muy rapido",
+      "expected": "almost",
+      "why": "Only the accent is missing."
+    },
+    {
+      "id": "almost-accent-ano",
+      "english": "Happy New Year!",
+      "spanish": "¡Feliz año nuevo!",
+      "alternatives": [],
+      "notes": null,
+      "typed": "Feliz ano nuevo",
+      "expected": "almost",
+      "gray": true,
+      "why": "Only the tilde is missing, but 'ano' is a different (embarrassing) word. Should be flagged clearly in the explanation."
+    },
+    {
+      "id": "almost-accent-el",
+      "english": "He speaks very fast.",
+      "spanish": "Él habla muy rápido.",
+      "alternatives": [],
+      "notes": null,
+      "typed": "El habla muy rapido",
+      "expected": "almost",
+      "why": "Accents only, though 'el' (the) vs 'él' (he) is worth pointing out."
+    },
+    {
+      "id": "almost-typo-swap",
+      "english": "We're not forgetting anything.",
+      "spanish": "No olvidamos nada.",
+      "alternatives": [],
+      "notes": null,
+      "typed": "No olivdamos nada",
+      "expected": "almost",
+      "why": "Two letters swapped."
+    },
+    {
+      "id": "almost-typo-missing-letter",
+      "english": "There is something that doesn't fit.",
+      "spanish": "Hay algo que no encaja.",
+      "alternatives": [],
+      "notes": null,
+      "typed": "Hay algo que no encja",
+      "expected": "almost",
+      "why": "One missing letter, clearly a typo of 'encaja'."
+    }
+  ]
+}

@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useReducer, useState } from "react";
 import { SpanishInput } from "@/components/SpanishInput";
+import { checkAnswer } from "@/lib/checkAnswer";
 import {
+  needsAiGrading,
   reviewReducer,
   startReview,
   summarize,
@@ -11,6 +13,7 @@ import {
   type ReviewCard,
 } from "@/lib/review";
 import { shuffle } from "@/lib/shuffle";
+import { gradeAnswerAction } from "./actions";
 
 type Props = {
   deckId: number;
@@ -23,6 +26,16 @@ export function ReviewSession({ deckId, cards }: Props) {
   // change it is dispatch(action) → reviewReducer (in src/lib/review.ts).
   const [state, dispatch] = useReducer(reviewReducer, cards, startReview);
   const [typed, setTyped] = useState("");
+
+  async function submit() {
+    const card = state.queue[state.index];
+    dispatch({ type: "submit", typed });
+    // Same decision the reducer makes: only ask the AI when the instant check isn't sure.
+    const instant = checkAnswer(typed, [card.spanish, ...card.alternatives]);
+    if (!needsAiGrading(typed, instant)) return;
+    const result = await gradeAnswerAction(card.id, typed).catch(() => ({ ok: false as const }));
+    dispatch(result.ok ? { type: "graded", grade: result.grade } : { type: "gradeFailed" });
+  }
 
   if (state.phase === "done") {
     return (
@@ -50,7 +63,7 @@ export function ReviewSession({ deckId, cards }: Props) {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            dispatch({ type: "submit", typed });
+            submit();
           }}
           className="flex flex-col gap-2"
         >
@@ -70,6 +83,14 @@ export function ReviewSession({ deckId, cards }: Props) {
             </span>
           </div>
         </form>
+      ) : state.phase === "grading" ? (
+        <div className="flex flex-col gap-2 rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
+          <p lang="es">
+            <span className="text-sm text-zinc-500">You typed: </span>
+            {typed}
+          </p>
+          <p className="animate-pulse text-sm text-zinc-500">Checking your answer…</p>
+        </div>
       ) : (
         last && (
           <Feedback
@@ -101,7 +122,10 @@ function Feedback({
   onOverride: () => void;
   onNext: () => void;
 }) {
-  const { verdict, reason, typed, expected, card, overridden } = answer;
+  const { verdict, reason, typed, expected, card, overridden, explanation, corrected, gradedBy } =
+    answer;
+  const showCorrected =
+    verdict !== "correct" && corrected && corrected.trim() !== typed.trim();
   const otherAnswers = [card.spanish, ...card.alternatives].filter(
     (a) => a !== expected,
   );
@@ -112,7 +136,11 @@ function Feedback({
         <p className="font-semibold">
           {verdict === "correct" && (overridden ? "✓ Marked correct" : "✓ Correct")}
           {verdict === "almost" &&
-            (reason === "spelling" ? "≈ Almost: check the spelling" : "≈ Almost: check the accents")}
+            (reason === "spelling"
+              ? "≈ Almost: check the spelling"
+              : reason === "accents"
+                ? "≈ Almost: check the accents"
+                : "≈ Almost")}
           {verdict === "wrong" && (typed.trim() ? "✗ Not quite" : "The answer is")}
         </p>
         {typed.trim() && verdict !== "correct" && (
@@ -121,7 +149,15 @@ function Feedback({
             {typed}
           </p>
         )}
+        {explanation && <p>{explanation}</p>}
+        {showCorrected && (
+          <p lang="es">
+            <span className="text-sm text-zinc-500">Your answer, fixed: </span>
+            <span className="font-medium">{corrected}</span>
+          </p>
+        )}
         <p lang="es" className="text-xl font-medium">
+          {gradedBy === "ai" && <span className="text-sm font-normal text-zinc-500">Card answer: </span>}
           {expected}
         </p>
         {otherAnswers.length > 0 && (
@@ -130,6 +166,9 @@ function Feedback({
           </p>
         )}
         {card.notes && <p className="text-sm italic text-zinc-500">{card.notes}</p>}
+        {gradedBy === "ai-failed" && (
+          <p className="text-xs text-zinc-500">AI check unavailable, so this is the instant check only.</p>
+        )}
       </div>
 
       <div className="flex items-center gap-3">

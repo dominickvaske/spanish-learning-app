@@ -2,8 +2,13 @@
  * The review session as a state machine:
  *
  *   answering --submit--> feedback --next--> answering (next card)
- *                            |                 ...
- *                         override         after the last card: done
+ *       |                    ^   |                 ...
+ *       |   (instant check   |   override      after the last card: done
+ *       |    not sure)       |
+ *       +----> grading ------+  graded / gradeFailed
+ *
+ * The instant check (checkAnswer) runs first. Only when it doesn't say
+ * "correct" does the session wait in "grading" for the AI grader.
  *
  * Every change goes through `reviewReducer(state, action) -> newState`.
  * It's a pure function (no UI, no database), so it's easy to test.
@@ -28,20 +33,36 @@ export type AnswerRecord = {
   expected: string;
   /** True if the user clicked "I was right". */
   overridden: boolean;
+  /** Who decided the verdict. "instant" = checkAnswer only; "ai-failed" = AI was asked but unavailable. */
+  gradedBy: "instant" | "ai" | "ai-failed";
+  /** From the AI grader. */
+  explanation?: string;
+  /** The learner's answer, minimally fixed by the AI grader. */
+  corrected?: string;
 };
+
+/** The AI grader's answer, as the review screen receives it. */
+export type AiGrade = { verdict: Verdict; explanation: string; corrected: string };
 
 export type ReviewState = {
   queue: ReviewCard[];
   index: number;
-  phase: "answering" | "feedback" | "done";
+  phase: "answering" | "grading" | "feedback" | "done";
   answers: AnswerRecord[];
 };
 
 export type ReviewAction =
   | { type: "submit"; typed: string }
+  | { type: "graded"; grade: AiGrade }
+  | { type: "gradeFailed" }
   | { type: "override" }
   | { type: "next" }
   | { type: "start"; cards: ReviewCard[] };
+
+/** Should this answer go to the AI grader? Not when it's clearly right, or blank. */
+export function needsAiGrading(typed: string, instant: CheckResult): boolean {
+  return instant.verdict !== "correct" && typed.trim() !== "";
+}
 
 export function startReview(cards: ReviewCard[]): ReviewState {
   return {
@@ -63,17 +84,48 @@ export function reviewReducer(
     case "submit": {
       if (state.phase !== "answering") return state;
       const card = state.queue[state.index];
-      const { verdict, reason, expected } = checkAnswer(action.typed, [
-        card.spanish,
-        ...card.alternatives,
-      ]);
+      const instant = checkAnswer(action.typed, [card.spanish, ...card.alternatives]);
+      const { verdict, reason, expected } = instant;
+      return {
+        ...state,
+        phase: needsAiGrading(action.typed, instant) ? "grading" : "feedback",
+        answers: [
+          ...state.answers,
+          {
+            card,
+            typed: action.typed,
+            verdict,
+            reason,
+            expected,
+            overridden: false,
+            gradedBy: "instant",
+          },
+        ],
+      };
+    }
+
+    case "graded": {
+      const last = state.answers.at(-1);
+      if (state.phase !== "grading" || !last) return state;
+      const { verdict, explanation, corrected } = action.grade;
       return {
         ...state,
         phase: "feedback",
         answers: [
-          ...state.answers,
-          { card, typed: action.typed, verdict, reason, expected, overridden: false },
+          ...state.answers.slice(0, -1),
+          { ...last, verdict, explanation, corrected, reason: undefined, gradedBy: "ai" },
         ],
+      };
+    }
+
+    case "gradeFailed": {
+      // Keep the instant check's verdict so the session can go on.
+      const last = state.answers.at(-1);
+      if (state.phase !== "grading" || !last) return state;
+      return {
+        ...state,
+        phase: "feedback",
+        answers: [...state.answers.slice(0, -1), { ...last, gradedBy: "ai-failed" }],
       };
     }
 
